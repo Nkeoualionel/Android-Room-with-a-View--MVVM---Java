@@ -5,8 +5,10 @@ import android.content.Context;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import androidx.annotation.NonNull;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 public abstract class WordRoomDatabase extends RoomDatabase {
 
@@ -30,4 +32,25 @@ public abstract class WordRoomDatabase extends RoomDatabase {
 
         return INSTANCE;
     }
+
+    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback(){
+
+        @Override
+        public void onOpen(@NonNull SupportSQLiteDatabase db) {
+            super.onOpen(db);
+
+            databaseWriteExecutor.execute(() -> {
+                WordDao dao = INSTANCE.wordDao();
+                dao.deleteAll();
+
+                Word word = new Word("Happy");
+                dao.insert(word);
+                word = new Word("vibes");
+                dao.insert(word);
+
+                word = new Word("only");
+                dao.insert(word);
+            });
+        }
+    };
 }
