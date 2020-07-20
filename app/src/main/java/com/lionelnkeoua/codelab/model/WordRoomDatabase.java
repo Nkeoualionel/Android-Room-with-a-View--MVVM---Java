@@ -6,10 +6,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import androidx.annotation.NonNull;
+import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+@Database(entities = {Word.class}, version = 1, exportSchema = false)
 public abstract class WordRoomDatabase extends RoomDatabase {
 
     public abstract WordDao wordDao();
@@ -25,6 +27,7 @@ public abstract class WordRoomDatabase extends RoomDatabase {
                         if(INSTANCE == null){
                             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     WordRoomDatabase.class, "word_database")
+                                    .addCallback(sRoomDatabaseCallback)
                                     .build();
                         }
                 }
