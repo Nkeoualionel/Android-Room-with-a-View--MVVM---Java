@@ -11,18 +11,18 @@ public class WordRepository {
     private WordDao wordDao;
     private LiveData<List<Word>> listLiveData;
 
-    WordRepository(Application application){
+    public WordRepository(Application application){
         WordRoomDatabase db = WordRoomDatabase.getDatabase(application);
         wordDao = db.wordDao();
         listLiveData = wordDao.getAllWord();
     }
 
-    LiveData<List<Word>> getWord(){
+   public LiveData<List<Word>> getWords(){
         return  listLiveData;
     }
 
 
-    void insert(Word word){
+    public void insert(Word word){
         WordRoomDatabase.databaseWriteExecutor.execute(() -> {
             wordDao.insert(word);
         });
